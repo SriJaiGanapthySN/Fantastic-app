@@ -1,5 +1,7 @@
-import 'package:fab/components/discover/custombuttondiscover.dart';
-import 'package:fab/components/journeys/addJourneyTile.dart';
+// ignore_for_file: deprecated_member_use
+import 'package:fab/components/discover/buttonimage.dart';
+import 'package:fab/components/discover/discoverbuttons.dart';
+import 'package:fab/components/discover/discoverstrip.dart';
 import 'package:fab/services/challenges_service.dart';
 import 'package:fab/services/coaching_service.dart';
 import 'package:fab/services/guided_activities.dart';
@@ -15,7 +17,8 @@ class Discoverscreen extends StatefulWidget {
   State<Discoverscreen> createState() => _DiscoverscreenState();
 }
 
-class _DiscoverscreenState extends State<Discoverscreen> {
+class _DiscoverscreenState extends State<Discoverscreen>
+    with SingleTickerProviderStateMixin {
   // service instance initiallization
   final CoachingService _coachingService = CoachingService();
   final JourneyService _journeyService = JourneyService();
@@ -30,8 +33,6 @@ class _DiscoverscreenState extends State<Discoverscreen> {
 
   //common variables
   bool _isLoading = true;
-  double _textSize = 20.0;
-  double _textOpacity = 1.0;
 
   final ScrollController _scrollController = ScrollController();
 
@@ -41,39 +42,29 @@ class _DiscoverscreenState extends State<Discoverscreen> {
 
   // Define images for each button
   final List<String> _buttonImages = [
-    "assets/images/image.png", // Journeys image
+    "assets/images/image (5).png", // Journeys image
     "assets/images/image (3).png", // Guided Coaching image
-    "assets/images/image (1).png", // Guided Activities image - replace with actual image
+    "assets/images/image (4).png", // Guided Activities image - replace with actual image
     "assets/images/image (2).png", // Challenges image - replace with actual image
   ];
-
-  // Define titles for each button
-  final List<String> _buttonTitles = [
-    "Journeys",
-    "Coaching Series",
-    "Guided Activities",
-    "Challenges",
-  ];
+  // Animation controller for data discovery animation
+  late AnimationController _dataDiscoveryController;
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_updateFontSize);
+
     // Load initial data based on default selected button (Journeys)
     getJourneys();
-  }
 
-  void _updateFontSize() {
-    double offset = _scrollController.offset;
-    double newSize = (24 - offset / 5).clamp(14.0, 24.0);
-    double newOpacity = (1.0 - (offset - 20.0) / (40.0 - 20.0)).clamp(0.0, 1.0);
+    // Initialize the animation controller with a longer duration to slow down the animation
+    _dataDiscoveryController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 5),
+    );
 
-    if (_textSize != newSize || _textOpacity != newOpacity) {
-      setState(() {
-        _textSize = newSize;
-        _textOpacity = newOpacity;
-      });
-    }
+    // Start the animation and make it repeat
+    _dataDiscoveryController.repeat();
   }
 
   //button press handler
@@ -134,7 +125,7 @@ class _DiscoverscreenState extends State<Discoverscreen> {
       final fetchedJourneys = await _journeyService.fetchJourneys();
       if (!mounted) return;
       setState(() {
-        journeys = fetchedJourneys ?? [];
+        journeys = fetchedJourneys;
         _isLoading = false;
       });
     } catch (e) {
@@ -153,7 +144,7 @@ class _DiscoverscreenState extends State<Discoverscreen> {
       final fetchedChallenges = await _challengesService.fetchChallenges();
       if (!mounted) return;
       setState(() {
-        challenges = fetchedChallenges ?? [];
+        challenges = fetchedChallenges;
         _isLoading = false;
       });
     } catch (e) {
@@ -168,168 +159,47 @@ class _DiscoverscreenState extends State<Discoverscreen> {
 
   @override
   void dispose() {
-    _scrollController.removeListener(_updateFontSize);
     _scrollController.dispose();
+    _dataDiscoveryController.dispose(); // Dispose the controller
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Stack(
         children: [
-          // Background Image
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/images/bgdiscover.jpeg'),
-                opacity: 0.4,
                 fit: BoxFit.cover,
               ),
             ),
           ),
-
-          // Animation
+          Buttonimage(currentImage: _currentImage),
           Positioned(
-            top: 0,
-            right: 0,
+            bottom: 0,
             left: 0,
-            child:
-                Lottie.asset("assets/animations/discoverscreenanimation.json"),
+            right: 0,
+            child: Lottie.asset(
+              "assets/animations/disbottom.json",
+              controller: _dataDiscoveryController,
+              repeat: false,
+              animate: false,
+              width: MediaQuery.of(context)
+                  .size
+                  .width, // Make animation span full width
+            ),
           ),
-
           Column(
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.1,
-                      right: MediaQuery.of(context).size.width * 0.05,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(1800),
-                        bottomRight: Radius.circular(2500),
-                      ),
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 500),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return FadeTransition(
-                              opacity: animation, child: child);
-                        },
-                        child: Image(
-                          height: MediaQuery.of(context).size.height * 0.4,
-                          key: ValueKey<String>(_currentImage),
-                          image: AssetImage(_currentImage),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.12,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomButtonDiscover(
-                            routineName: "Journeys",
-                            handleButtonPress: _handleButtonPress,
-                            a: 0,
-                            selectedButtonIndex: _selectedButtonIndex),
-                        CustomButtonDiscover(
-                            routineName: "Coaching Series",
-                            handleButtonPress: _handleButtonPress,
-                            a: 1,
-                            selectedButtonIndex: _selectedButtonIndex),
-                        CustomButtonDiscover(
-                            routineName: "Guided Activities",
-                            handleButtonPress: _handleButtonPress,
-                            a: 2,
-                            selectedButtonIndex: _selectedButtonIndex),
-                        CustomButtonDiscover(
-                            routineName: "Challenges",
-                            handleButtonPress: _handleButtonPress,
-                            a: 3,
-                            selectedButtonIndex: _selectedButtonIndex)
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              Discoverbuttons(
+                  handleButtonPress: _handleButtonPress,
+                  selectedButtonIndex: _selectedButtonIndex),
               SizedBox(height: screenHeight * 0.09),
-              Stack(
-                children: [
-                  // Fixed position title that will fade out
-                  Positioned(
-                    top: screenHeight * 0.045,
-                    left: screenWidth * 0.1,
-                    child: Opacity(
-                      opacity: _textOpacity,
-                      child: AnimatedDefaultTextStyle(
-                        duration: const Duration(milliseconds: 300),
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: _textSize,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 300),
-                          transitionBuilder:
-                              (Widget child, Animation<double> animation) {
-                            return FadeTransition(
-                              opacity: animation,
-                              child: child,
-                            );
-                          },
-                          child: Text(
-                            _buttonTitles[_selectedButtonIndex],
-                            key: ValueKey<String>(
-                                _buttonTitles[_selectedButtonIndex]),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // The scrollable content
-                  SingleChildScrollView(
-                    controller: _scrollController,
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        SizedBox(width: screenWidth * 0.6),
-                        SizedBox(
-                          width: currentData.length * (screenWidth * 0.462),
-                          height: screenHeight * 0.16,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: currentData.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: AddJourneyTile(
-                                  tile: currentData[index],
-                                  email: widget.email,
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              Discoverstrip(currentData: currentData, email: widget.email)
             ],
           ),
         ],

@@ -91,7 +91,7 @@ class _JourneysecondlevelState extends State<Journeysecondlevel>
   String getTypeText(String type, int pos) {
     switch (type) {
       case 'CONTENT':
-        return 'Your Letter no. ${pos}';
+        return 'Your Letter no. $pos';
       case 'ONE_TIME_REMINDER':
         return 'One-Time Action';
       case 'MOTIVATOR':

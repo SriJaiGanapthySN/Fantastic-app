@@ -10,7 +10,7 @@ class Journeyplayscreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final JourneyService _journeyService = JourneyService();
+    final JourneyService journeyService = JourneyService();
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -42,12 +42,12 @@ class Journeyplayscreen extends StatelessWidget {
       // Run the journey update logic in the background
       Future(() async {
         try {
-          final data = await _journeyService.fetchUnreleaseJourney(email);
-          final userJourneys = await _journeyService.fetchUserJourneys(email);
+          final data = await journeyService.fetchUnreleaseJourney(email);
+          final userJourneys = await journeyService.fetchUserJourneys(email);
 
           if (data != null) {
             final String docId = data['objectId'];
-            await _journeyService.updateIsReleased(email, docId);
+            await journeyService.updateIsReleased(email, docId);
           }
 
           if (userJourneys.isNotEmpty) {
@@ -55,18 +55,18 @@ class Journeyplayscreen extends StatelessWidget {
                 userJourneys.any((journey) => journey['objectId'] == objId);
 
             if (isDocIdPresent) {
-              await _journeyService.updateIsReleased(email, objId);
+              await journeyService.updateIsReleased(email, objId);
               print(
                   'Journey with docId $objId is already present in userJourneys.');
             } else {
-              await _journeyService.addSkillTrack(objId, email);
-              final skills = await _journeyService.addSkills(objId, email);
+              await journeyService.addSkillTrack(objId, email);
+              final skills = await journeyService.addSkills(objId, email);
               if (skills.isNotEmpty) {
                 final goals =
-                    await _journeyService.addSkillLevel(skills, email);
+                    await journeyService.addSkillLevel(skills, email);
                 print('Skill levels added!');
                 if (goals.isNotEmpty) {
-                  await _journeyService.addSkillGoals(goals, email);
+                  await journeyService.addSkillGoals(goals, email);
                   print('Goals added!');
                 } else {
                   print('No goals found to add.');
@@ -196,7 +196,7 @@ class Journeyplayscreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(0),
                       ),
-                      child: Container(
+                      child: SizedBox(
                         height: 580,
                         child: Column(
                           children: [

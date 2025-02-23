@@ -182,10 +182,10 @@ Stream<List<DocumentSnapshot>> getAddTasks(String userEmail) async* {
     }
 
     print("Combined Tasks:");
-    combinedTasks.forEach((task) {
+    for (var task in combinedTasks) {
       print(task['objectID']); // Print objectID of combined tasks
       print(task['isdailyroutine']);
-    });
+    }
 
     // Yield the combined list of tasks as a stream
     yield combinedTasks;
@@ -373,12 +373,12 @@ Future<void> deleteTaskNote({
   }
 
   Future<int> getTotalUserTasks(String userEmail) async {
-    var _querysnapshot = await _firestore.collection('testers').doc(userEmail).collection('tasks').get();
-    return _querysnapshot.docs.length;
+    var querysnapshot = await _firestore.collection('testers').doc(userEmail).collection('tasks').get();
+    return querysnapshot.docs.length;
   }
 
   Future<int> getTotalUserHabits(String userEmail) async {
-    var _querysnapshot = await _firestore.collection('testers').doc(userEmail).collection('habits').get();
-    return _querysnapshot.docs.length;
+    var querysnapshot = await _firestore.collection('testers').doc(userEmail).collection('habits').get();
+    return querysnapshot.docs.length;
   }
 }

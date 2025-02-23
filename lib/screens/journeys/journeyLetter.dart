@@ -13,12 +13,12 @@ class JourneyLetter extends StatelessWidget {
   final skillTrack skilltrack;
 
   JourneyLetter({
-    Key? key,
+    super.key,
     required this.letterData,
     required this.skill,
     required this.skilltrack,
     required this.email,
-  }) : super(key: key);
+  });
 
   final JourneyService _journeyService = JourneyService();
 

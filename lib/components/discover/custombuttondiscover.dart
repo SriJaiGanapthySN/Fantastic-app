@@ -15,22 +15,18 @@ class CustomButtonDiscover extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isSelected = selectedButtonIndex == a;
+
     return Container(
-      width: MediaQuery.of(context).size.width * 0.4,
-      margin: EdgeInsets.only(bottom: 15),
-      child: ElevatedButton(
+      height: MediaQuery.of(context).size.width * 0.1,
+      width: MediaQuery.of(context).size.width * 0.35,
+      margin: EdgeInsets.only(bottom: 15, top: 10),
+      child: TextButton(
         onPressed: () => handleButtonPress(a),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: selectedButtonIndex == a
-              ? const Color.fromARGB(255, 255, 255, 255)
-              : const Color.fromARGB(255, 215, 172, 52),
-          foregroundColor: selectedButtonIndex == a
-              ? const Color.fromARGB(255, 215, 172, 52)
-              : const Color.fromARGB(255, 255, 255, 255),
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
+        style: TextButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          foregroundColor: isSelected ? Colors.pinkAccent : Colors.black,
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           elevation: 5,
         ),
         child: Text(

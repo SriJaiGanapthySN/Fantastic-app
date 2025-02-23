@@ -60,20 +60,55 @@ class _AddJourneyTileState extends State<AddJourneyTile> {
                 curve: Curves.easeInOut, // Smooth animation curve
                 margin: EdgeInsets.symmetric(horizontal: screenWidth * 0),
                 padding: EdgeInsets.all(screenWidth * 0.03),
-                height: screenHeight * 0.1,
+                height: screenHeight * 0.12,
                 width: screenWidth * 0.4,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: infotapped
                       ? Colors.blue // Blue when info is tapped
                       : null, // Null to show image
-                  image: infotapped
-                      ? null // No image when info is tapped
-                      : DecorationImage(
-                          image: NetworkImage(url),
-                          fit: BoxFit.cover,
-                        ),
                 ),
+                child: !infotapped
+                    ? Material(
+                        shadowColor: Colors.black,
+                        elevation: 20, // Add elevation here
+                        borderRadius: BorderRadius.circular(10),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                url,
+                                fit: BoxFit.cover,
+                                width: screenWidth * 0.4,
+                                height: screenWidth * 0.5,
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                      color: Colors.amberAccent,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : null,
               ),
             ],
           ),

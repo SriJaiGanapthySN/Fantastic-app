@@ -4,7 +4,7 @@ import 'dart:ui'; // Import for ImageFilter
 class BlurFadeAndColorTextEffect extends StatefulWidget {
   final String text;
 
-  BlurFadeAndColorTextEffect({required this.text});
+  const BlurFadeAndColorTextEffect({super.key, required this.text});
 
   @override
   _BlurFadeAndColorTextEffectState createState() =>

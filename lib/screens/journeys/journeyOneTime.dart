@@ -15,12 +15,12 @@ class JourneyOneTime extends StatelessWidget {
   final skillTrack skilltrack;
 
   JourneyOneTime({
-    Key? key,
+    super.key,
     required this.oneTimeData,
     required this.skill,
     required this.email,
     required this.skilltrack,
-  }) : super(key: key);
+  });
 
   Future<String> fetchContent(String url) async {
     try {

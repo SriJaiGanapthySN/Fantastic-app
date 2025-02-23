@@ -20,7 +20,7 @@ class JourneyService {
 
       // Convert documents to a List of Maps
       return filteredDocs
-          .map((doc) => doc.data() as Map<String, dynamic>)
+          .map((doc) => doc.data())
           .toList();
     } catch (e) {
       print('Error fetching unreleased journey: $e');
@@ -44,7 +44,7 @@ class JourneyService {
       if (querySnapshot.docs.isNotEmpty) {
         // Convert the first document into a skillTrack object
         return skillTrack
-            .fromMap(querySnapshot.docs.first.data() as Map<String, dynamic>);
+            .fromMap(querySnapshot.docs.first.data());
       }
 
       // Return null if no matching document is found
@@ -68,7 +68,7 @@ class JourneyService {
 
       if (querySnapshot.docs.isNotEmpty) {
         // Return the first document's data as Map
-        return querySnapshot.docs.first.data() as Map<String, dynamic>;
+        return querySnapshot.docs.first.data();
       }
 
       // Return null if no matching document is found
@@ -92,7 +92,7 @@ class JourneyService {
     if (querySnapshot.docs.isNotEmpty) {
       // Map each document to a Map<String, dynamic> and return as a list
       return querySnapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
+          .map((doc) => doc.data())
           .toList();
     }
 
@@ -266,7 +266,7 @@ Future<void> addSkillTrack(String id, String email) async {
 
       // Map the documents into a list of Skill objects
       final List<Skill> skills = querySnapshot.docs
-          .map((doc) => Skill.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) => Skill.fromMap(doc.data()))
           .toList();
 
       // Reference to the target path: /testers/{email}/skill
@@ -303,11 +303,11 @@ Future<void> addSkillTrack(String id, String email) async {
   }
 
   Future<int> getTotalSkillLevels(String id) async {
-    var _querysnapshot = await _firestore
+    var querysnapshot = await _firestore
         .collection('skillLevel')
         .where('skillId', isEqualTo: id)
         .get();
-    return _querysnapshot.docs.length;
+    return querysnapshot.docs.length;
   }
 
   Future<List<String>> addSkillLevel(List<Skill> skills, String email) async {
@@ -338,7 +338,7 @@ Future<void> addSkillTrack(String id, String email) async {
 
         // Add each document to the specified path
         for (var doc in querySnapshot.docs) {
-          final skillData = doc.data() as Map<String, dynamic>;
+          final skillData = doc.data();
 
           // Check if 'goalId' exists and add it to the goals list
           if (skillData.containsKey('goalId')) {
@@ -456,7 +456,7 @@ Future<void> addSkillTrack(String id, String email) async {
 
       // Map the documents into a list of Skill objects
       final List<Skill> skills = querySnapshot.docs
-          .map((doc) => Skill.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) => Skill.fromMap(doc.data()))
           .toList();
 
       // Sort skills based on the 'position' field
@@ -489,7 +489,7 @@ Future<void> addSkillTrack(String id, String email) async {
 
       // Map the documents into a list of Map<String, dynamic>
       List<Map<String, dynamic>> skillLevels = querySnapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
+          .map((doc) => doc.data())
           .toList();
 
       return skillLevels;
@@ -518,7 +518,7 @@ Future<void> addSkillTrack(String id, String email) async {
 
       // Since objectId should be unique, we expect one document
       final skillLevel =
-          querySnapshot.docs.first.data() as Map<String, dynamic>;
+          querySnapshot.docs.first.data();
 
       return skillLevel;
     } catch (e) {

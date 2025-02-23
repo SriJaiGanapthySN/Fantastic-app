@@ -15,7 +15,7 @@ class GuidedActivities {
 
     // Convert documents to a List of Maps
     return querySnapshot.docs
-        .map((doc) => doc.data() as Map<String, dynamic>)
+        .map((doc) => doc.data())
         .toList();
   } catch (e) {
     print('Error fetching categories: $e');
@@ -45,7 +45,7 @@ Future<List<Map<String, dynamic>>> fetchTrainings(List<String> ids) async {
 
       // Add fetched data to the overall results list
       allResults.addAll(querySnapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
+          .map((doc) => doc.data())
           .toList());
     }
 
@@ -77,7 +77,7 @@ Future<List<Map<String, dynamic>>> fetchSteps(String id) async {
 
     // Convert documents to a List of Maps
     List<Map<String, dynamic>> data = querySnapshot.docs
-        .map((doc) => doc.data() as Map<String, dynamic>)
+        .map((doc) => doc.data())
         .toList();
 
     // No need to sort again, but if required:
@@ -112,7 +112,7 @@ Future<List<Map<String, dynamic>>> fetchSteps(String id) async {
       if (querySnapshot.docs.isNotEmpty) {
         // Convert the first document into a skillTrack object
         return skillTrack
-            .fromMap(querySnapshot.docs.first.data() as Map<String, dynamic>);
+            .fromMap(querySnapshot.docs.first.data());
       }
 
       // Return null if no matching document is found
@@ -137,7 +137,7 @@ Future<List<Map<String, dynamic>>> fetchSteps(String id) async {
 
       if (querySnapshot.docs.isNotEmpty) {
         // Return the first document's data as Map
-        return querySnapshot.docs.first.data() as Map<String, dynamic>;
+        return querySnapshot.docs.first.data();
       }
 
       // Return null if no matching document is found
@@ -259,7 +259,7 @@ Future<List<Map<String, dynamic>>> fetchSteps(String id) async {
 
       // Map the documents into a list of Skill objects
       final List<Skill> skills = querySnapshot.docs
-          .map((doc) => Skill.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) => Skill.fromMap(doc.data()))
           .toList();
 
       // Reference to the target path: /testers/{email}/skill
@@ -320,7 +320,7 @@ Future<List<Map<String, dynamic>>> fetchSteps(String id) async {
 
       // Add each document to the specified path
       for (var doc in querySnapshot.docs) {
-        final skillData = doc.data() as Map<String, dynamic>;
+        final skillData = doc.data();
 
         // Check if 'goalId' exists and add it to the goals list
         if (skillData.containsKey('goalId')) {
@@ -438,7 +438,7 @@ Future<void> addSkillGoals(List<String> ids, String email) async {
 
       // Map the documents into a list of Skill objects
       final List<Skill> skills = querySnapshot.docs
-          .map((doc) => Skill.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) => Skill.fromMap(doc.data()))
           .toList();
 
       // Sort skills based on the 'position' field
@@ -471,7 +471,7 @@ Future<void> addSkillGoals(List<String> ids, String email) async {
 
       // Map the documents into a list of Map<String, dynamic>
       List<Map<String, dynamic>> skillLevels = querySnapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
+          .map((doc) => doc.data())
           .toList();
 
       return skillLevels;
@@ -500,7 +500,7 @@ Future<void> addSkillGoals(List<String> ids, String email) async {
 
       // Since objectId should be unique, we expect one document
       final skillLevel =
-          querySnapshot.docs.first.data() as Map<String, dynamic>;
+          querySnapshot.docs.first.data();
 
       return skillLevel;
     } catch (e) {
