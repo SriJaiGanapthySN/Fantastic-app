@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Signinscreen extends StatefulWidget {
-  Signinscreen({super.key});
+  const Signinscreen({super.key});
 
   @override
   _SigninscreenState createState() => _SigninscreenState();
@@ -127,10 +127,6 @@ class _SigninscreenState extends State<Signinscreen> {
                     // Sign Up Button
                     ElevatedButton(
                       onPressed: _signUpWithEmailPassword,
-                      child: Text(
-                        "Sign Up",
-                        style: TextStyle(fontSize: 16),
-                      ),
                       style: ElevatedButton.styleFrom(
                         // primary: Colors.orange,
                         padding:
@@ -138,6 +134,10 @@ class _SigninscreenState extends State<Signinscreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
+                      ),
+                      child: Text(
+                        "Sign Up",
+                        style: TextStyle(fontSize: 16),
                       ),
                     ),
                     SizedBox(height: 20),

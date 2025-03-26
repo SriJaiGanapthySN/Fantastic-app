@@ -8,14 +8,15 @@ import 'package:flutter_html/flutter_html.dart';
 class PlayAudio extends StatefulWidget {
   final String email;
   // final QueryDocumentSnapshot couching;
-  final Map<String,dynamic> coachingData;
+  final Map<String, dynamic> coachingData;
   // final Map<String,dynamic> coachingSeries;
 
-  const PlayAudio({super.key, 
-  required this.email, 
-  // required this.couching,
-  required this.coachingData,
-  // required this.coachingSeries
+  const PlayAudio({
+    super.key,
+    required this.email,
+    // required this.couching,
+    required this.coachingData,
+    // required this.coachingSeries
   });
 
   @override
@@ -28,7 +29,7 @@ class _PlayAudioState extends State<PlayAudio> {
   bool isPlaying = true;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
-  bool ran=false;
+  bool ran = false;
   bool isMuted = false;
 
   String formatTime(int seconds) {
@@ -108,12 +109,11 @@ class _PlayAudioState extends State<PlayAudio> {
     audioPlayer.setVolume(isMuted ? 0 : 1);
   }
 
-@override
+  @override
   void dispose() {
     audioPlayer.stop();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +133,8 @@ class _PlayAudioState extends State<PlayAudio> {
                   isMuted ? "On" : "Off",
                   style: TextStyle(color: Colors.white),
                 ),
-                icon: Icon(isMuted ? Icons.notifications_on : Icons.notifications_off),
+                icon: Icon(
+                    isMuted ? Icons.notifications_on : Icons.notifications_off),
                 style: ElevatedButton.styleFrom(
                   elevation: 0.5,
                   backgroundColor: Colors.grey[800],
@@ -151,7 +152,7 @@ class _PlayAudioState extends State<PlayAudio> {
         margin: EdgeInsets.only(top: 60),
         child: Column(
           children: [
-            Container(
+            SizedBox(
                 height: 120,
                 width: 400,
                 child: Lottie.asset('assets/animations/audio.json')),
@@ -175,8 +176,7 @@ class _PlayAudioState extends State<PlayAudio> {
                           width: 300,
                           child: Slider(
                             activeColor: Colors.white38,
-                            inactiveColor:
-                                Colors.white12,
+                            inactiveColor: Colors.white12,
                             min: 0,
                             max: duration.inSeconds.toDouble(),
                             value: position.inSeconds.toDouble(),
@@ -233,7 +233,11 @@ class _PlayAudioState extends State<PlayAudio> {
                       margin: EdgeInsets.symmetric(horizontal: 20),
                       height: 40,
                       decoration: BoxDecoration(
-                        color: widget.coachingData["type"]=="FOCUS" ?Colors.orange:widget.coachingData["type"]=="NIGHTLY"?Colors.black38:Colors.red,
+                        color: widget.coachingData["type"] == "FOCUS"
+                            ? Colors.orange
+                            : widget.coachingData["type"] == "NIGHTLY"
+                                ? Colors.black38
+                                : Colors.red,
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: Row(
@@ -280,7 +284,7 @@ class _PlayAudioState extends State<PlayAudio> {
                       ),
                       SizedBox(width: 20),
                       // Add to Morning Routine Button
-                      Container(
+                      SizedBox(
                         width: 270,
                         child: ElevatedButton.icon(
                           onPressed: () {},

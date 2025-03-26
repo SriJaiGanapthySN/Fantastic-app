@@ -31,9 +31,9 @@ class _TaskrevealState extends State<habitPlay> {
   int _currentIndex = 0; // Track the current task
   bool _isSnoozed = false; // Track snooze state
   bool _isSkiped = false; // Track if the task is skipped
-  AudioPlayer _audioPlayer = AudioPlayer(); // Audio player instance
+  final AudioPlayer _audioPlayer = AudioPlayer(); // Audio player instance
   final AudioPlayer _audioPlayerBgm = AudioPlayer(); // Audio player instance
-  AudioPlayer _audioPlayerDrag = AudioPlayer(); // Audio player instance
+  final AudioPlayer _audioPlayerDrag = AudioPlayer(); // Audio player instance
   late ScrollController _scrollController;
   bool _isPlayingAudio = false;
   Map<String, dynamic>? habitCoachingData;
@@ -288,7 +288,7 @@ class _TaskrevealState extends State<habitPlay> {
   }
 
   double getNotepadContentHeight(String data) {
-    if (data != null && data.isNotEmpty) {
+    if (data.isNotEmpty) {
       double textHeight = (data.length / 50).ceil() *
           24.0; // Approximation: 50 characters per line, 24px per line
 
@@ -968,8 +968,7 @@ class _TaskrevealState extends State<habitPlay> {
                                                   ),
                                                 ),
                                                 IconButton(
-                                                  onPressed: (items != null &&
-                                                          items.isNotEmpty)
+                                                  onPressed: (items.isNotEmpty)
                                                       ? () {
                                                           // Navigate only if 'items' is not null and not empty
                                                           Navigator.push(
@@ -993,8 +992,7 @@ class _TaskrevealState extends State<habitPlay> {
                                                       : null, // Disable the button if 'items' is null or empty
                                                   icon: Icon(
                                                     Icons.book,
-                                                    color: (items != null &&
-                                                            items.isNotEmpty)
+                                                    color: (items.isNotEmpty)
                                                         ? Colors.white
                                                         : Colors
                                                             .grey, // White if 'items' is not empty, grey if empty

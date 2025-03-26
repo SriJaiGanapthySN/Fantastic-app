@@ -7,7 +7,7 @@ import 'discover/discoverscreen.dart'; // Import your Discoverscreen
 class MainScreen extends StatefulWidget {
   final String email;
 
-  const MainScreen({Key? key, required this.email}) : super(key: key);
+  const MainScreen({super.key, required this.email});
 
   @override
   State<MainScreen> createState() => _MainScreenState();

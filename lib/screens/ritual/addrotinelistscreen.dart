@@ -249,27 +249,23 @@
 //   }
 // }
 
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fab/services/task_services.dart';
 
 class Addrotinelistscreen extends StatefulWidget {
-    final List<Map<String, dynamic>> habits;
+  final List<Map<String, dynamic>> habits;
   final List<Map<String, dynamic>> updateHabits;
   final String email;
   final VoidCallback onHabitUpdate;
 
   const Addrotinelistscreen({
-    Key? key,
-          required this.habits,
-      required this.updateHabits,
+    super.key,
+    required this.habits,
+    required this.updateHabits,
     required this.email,
     required this.onHabitUpdate,
-  }) : super(key: key);
+  });
 
   @override
   State<Addrotinelistscreen> createState() => _AddRoutineListScreenState();
@@ -290,7 +286,8 @@ class _AddRoutineListScreenState extends State<Addrotinelistscreen> {
   Future<void> fetchData() async {
     try {
       final habits = await TaskServices().getHabits(); // Get all habits
-      final userHabits = await TaskServices().getUserHabits(widget.email); // Get user habits
+      final userHabits =
+          await TaskServices().getUserHabits(widget.email); // Get user habits
 
       setState(() {
         allHabits = habits;
@@ -367,9 +364,7 @@ class _AddRoutineListScreenState extends State<Addrotinelistscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-
-appBar: AppBar(
+      appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -415,7 +410,6 @@ appBar: AppBar(
         ),
         backgroundColor: Colors.transparent,
       ),
-
       body: allHabits.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
@@ -446,16 +440,16 @@ appBar: AppBar(
                             const SizedBox(width: 20),
                             // Text(habit['name']),
                             Expanded(
-                          child: Text(
-                            habit['name'] ?? '',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              color: Colors.black,
+                              child: Text(
+                                habit['name'] ?? '',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                ),
+                                softWrap: true,
+                                overflow: TextOverflow.visible,
+                              ),
                             ),
-                            softWrap: true,
-                            overflow: TextOverflow.visible,
-                          ),
-                        ),
                             // Expanded(
                             //     child: Text(habit['name'],
                             //         textAlign: TextAlign.start)),
@@ -472,9 +466,7 @@ appBar: AppBar(
                         ),
                       ),
                     ],
-                    
                   ),
-                  
                 );
               },
             ),

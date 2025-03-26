@@ -1,4 +1,5 @@
-import 'package:fab/components/common/mygridtile.dart';
+import 'dart:ui';
+
 import 'package:fab/screens/guidedcoaching/guidedcoachingsecondlevel.dart';
 import 'package:fab/services/guided_activities.dart';
 import 'package:flutter/material.dart';
@@ -37,54 +38,159 @@ class _GuidedcoachingmenuState extends State<Guidedcoachingmenu> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     // Dynamically calculate the crossAxisCount based on screen width
-    final int crossAxisCount = screenWidth > 600
-        ? 3 // Tablets or larger screens
-        : 2; // Phones
-
-    // Calculate tile height based on available screen height
-    final double tileHeight = screenHeight * 0.25;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Guides',
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-            color: Colors.pink,
-          ),
-        ),
-        iconTheme: const IconThemeData(color: Colors.pink),
-      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 5,
-                childAspectRatio: screenWidth / (tileHeight * crossAxisCount),
-              ),
-              padding: const EdgeInsets.all(5),
-              itemCount: categoryData.length,
-              itemBuilder: (context, index) {
-                final category = categoryData[index];
-                return Mygridtile(
-                  url: category['imageUrl'] ?? "assets/images/default.jpg",
-                  title: category['name'] ?? "No Title",
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Guidedcoachingsecondlevel(
-                          email: widget.email,
-                          category: category,
+          : SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Container(
+                margin: EdgeInsets.only(
+                  top: screenHeight * 0.1,
+                  left: screenWidth * 0.05,
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      "Guided \nActivites",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(width: 30),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: SizedBox(
+                        height: screenHeight * 0.26,
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: BackdropFilter(
+                                filter:
+                                    ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color:
+                                        const Color.fromARGB(255, 209, 149, 59)
+                                            // ignore: deprecated_member_use
+                                            .withOpacity(0.1), // Light overlay
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Explore Learning Paths",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    "Choose a path to begin",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey),
+                                  ),
+                                  SizedBox(height: 10),
+                                  SizedBox(
+                                    width: categoryData.length *
+                                        (screenWidth * 0.462),
+                                    height: screenHeight * 0.16,
+                                    child: ListView.builder(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      scrollDirection: Axis.horizontal,
+                                      padding: const EdgeInsets.all(5),
+                                      itemCount: categoryData.length,
+                                      itemBuilder: (context, index) {
+                                        final category = categoryData[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16.0),
+                                          child: InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Guidedcoachingsecondlevel(
+                                                    email: widget.email,
+                                                    category: category,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: Column(
+                                              children: [
+                                                // Background Image Container
+                                                AnimatedContainer(
+                                                  duration: const Duration(
+                                                      milliseconds:
+                                                          300), // Animation duration
+                                                  curve: Curves
+                                                      .easeInOut, // Smooth animation curve
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal:
+                                                          screenWidth * 0),
+                                                  padding: EdgeInsets.all(
+                                                      screenWidth * 0.03),
+                                                  height: screenHeight * 0.1,
+                                                  width: screenWidth * 0.4,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    color: Colors
+                                                        .blue, // Null to show image
+                                                    image: DecorationImage(
+                                                      image: NetworkImage(
+                                                          category['imageUrl']),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                // Overlaying Title, Subtitle, Info Icon, and Percentage Text
+                                                Container(
+                                                  margin: EdgeInsets.only(
+                                                      top: screenHeight * 0.01),
+                                                  child: Text(
+                                                    category['name'],
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    softWrap: true,
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize:
+                                                          screenWidth * 0.035,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    );
-                  },
-                );
-              },
+                    ),
+                  ],
+                ),
+              ),
             ),
     );
   }

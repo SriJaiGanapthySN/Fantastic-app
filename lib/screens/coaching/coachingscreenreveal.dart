@@ -104,7 +104,7 @@ class _Coachingscreenreveal extends State<Coachingscreenreveal> {
                         const SizedBox(height: 16),
                       ],
                     );
-                  }).toList(),
+                  }),
                 ],
               ),
             ),

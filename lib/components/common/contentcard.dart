@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 
 class ContentCard extends StatefulWidget {
   final Map<String, dynamic> coaching;

@@ -1,11 +1,6 @@
-import 'package:fab/screens/challenges/audio.dart';
 import 'package:fab/firebase_options.dart';
-import 'package:fab/screens/challenges/challengerevealscreen.dart';
 
 import 'package:fab/screens/auth/login/logingupinterfacescreen.dart';
-import 'package:fab/screens/ritual/notesscreen.dart';
-import 'package:fab/screens/ritual/routinelistscreen.dart';
-import 'package:fab/screens/ritual/taskreveal.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -48,3 +43,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

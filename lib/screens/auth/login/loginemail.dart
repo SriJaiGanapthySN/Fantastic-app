@@ -1,12 +1,9 @@
 import 'package:fab/components/common/mytextfield.dart';
 import 'package:fab/screens/nacScreen.dart';
-import 'package:fab/screens/ritual/routinelistscreen.dart';
 import 'package:fab/screens/auth/signup/signinscreen.dart';
-import 'package:fab/components/common/stackcard.dart';
-import 'package:fab/services/task_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fab/screens/homepage.dart'; // Import HomePage
+// Import HomePage
 
 class LoginScreenEmail extends StatefulWidget {
   const LoginScreenEmail({super.key});

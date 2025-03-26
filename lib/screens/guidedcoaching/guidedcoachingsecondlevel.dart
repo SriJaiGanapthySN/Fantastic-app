@@ -74,7 +74,7 @@ class _GuidedcoachingsecondlevelState extends State<Guidedcoachingsecondlevel> {
                     colorFromString(widget.category["color"]),
                     Colors.transparent, // Add a second color
                   ],
-                  stops: [0.6, 1.0], // Now matches the length of 'colors'
+                  // stops: [0.6, 1.0], // Now matches the length of 'colors'
                 ),
               ),
               child: CustomScrollView(
@@ -119,7 +119,7 @@ class _GuidedcoachingsecondlevelState extends State<Guidedcoachingsecondlevel> {
                                   colors: [
                                     colorFromString(widget.category["color"]),
                                   ],
-                                  stops: [0.6, 1.0], // Creates the fade effect
+                                  // stops: [0.6, 1.0], // Creates the fade effect
                                 ),
                               ),
                             ),

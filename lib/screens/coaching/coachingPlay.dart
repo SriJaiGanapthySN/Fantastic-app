@@ -427,71 +427,78 @@ class _CoachingplayState extends State<Coachingplay> {
   // }
 
   void _showEndDialog() {
-  showDialog(
-    context: context,
-    barrierDismissible: false, // Prevents dismissing by tapping outside
-    builder: (context) {
-      return Dialog(
-        backgroundColor: Colors.transparent, // Make the dialog background transparent
-        child: Stack(
-          children: [
-            // This will allow the background content to be visible
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.black.withOpacity(0.5), Colors.black.withOpacity(0.3)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-            ),
-            // Dialog content
-            Center(
-              child: Container(
-                padding: EdgeInsets.all(20),
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevents dismissing by tapping outside
+      builder: (context) {
+        return Dialog(
+          backgroundColor:
+              Colors.transparent, // Make the dialog background transparent
+          child: Stack(
+            children: [
+              // This will allow the background content to be visible
+              Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [BoxShadow(blurRadius: 10, color: Colors.black26)],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      "Session Complete",
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      "Do you want to proceed to the next coaching?",
-                      style: TextStyle(fontSize: 16),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        _proceedToNextCoaching();
-                      },
-                      child: Text("Yes"),
-                    ),
-                  ],
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.black.withOpacity(0.5),
+                      Colors.black.withOpacity(0.3)
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-      );
-    },
-  );
+              // Dialog content
+              Center(
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(blurRadius: 10, color: Colors.black26)
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Session Complete",
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "Do you want to proceed to the next coaching?",
+                        style: TextStyle(fontSize: 16),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _proceedToNextCoaching();
+                        },
+                        child: Text("Yes"),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
 
-  Future.delayed(Duration(seconds: 5), () {
-    if (Navigator.canPop(context)) {
-      Navigator.pop(context); // Close the dialog automatically
-      _proceedToNextCoaching(); // Proceed to next coaching
-    }
-  });
-}
+    Future.delayed(Duration(seconds: 5), () {
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context); // Close the dialog automatically
+        _proceedToNextCoaching(); // Proceed to next coaching
+      }
+    });
+  }
 
   void _proceedToNextCoaching() {
     int currentIndex = widget.coachings.indexOf(widget.coachingData);
@@ -565,7 +572,7 @@ class _CoachingplayState extends State<Coachingplay> {
         margin: EdgeInsets.only(top: 60),
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: 120,
               width: 400,
               child: Lottie.asset('assets/animations/audio.json'),

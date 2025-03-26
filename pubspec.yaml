@@ -55,6 +55,9 @@ dependencies:
   flutter_tts: ^4.2.2
   speech_to_text: ^7.0.0
   permission_handler: ^11.4.0
+  carousel_slider: ^5.0.0
+  vertical_card_pager: ^1.6.3
+  curved_carousel: ^0.0.8
 
 dev_dependencies:
   flutter_test:
@@ -116,6 +119,12 @@ flutter:
     - "assets/animations/QnA/6. Everything combined/data.json"
     - "assets/animations/QnA/2. Circle/data.json"
     - "assets/images/blur.jpeg"
+    - "assets/images/image.png"
+    - "assets/images/image (1).png"
+    - "assets/images/image (2).png"
+    - "assets/images/image (3).png"
+    - "assets/images/bgdiscover.jpeg"
+    - "assets/animations/discoverscreenanimation.json"
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

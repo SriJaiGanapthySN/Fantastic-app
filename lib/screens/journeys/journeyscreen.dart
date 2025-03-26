@@ -30,18 +30,17 @@ class _JourneyscreenState extends State<Journeyscreen>
       Tween<double>(begin: 0.6, end: 1.2).animate(_controller);
   late final Animation<double> _fadeAnimation =
       Tween<double>(begin: 1, end: 0.2).animate(_controller);
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   @override
   void initState() {
     super.initState();
     print("object_________________");
     _fetchJourney();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   Future<void> fetchSkill() async {
@@ -54,7 +53,6 @@ class _JourneyscreenState extends State<Journeyscreen>
         skills = result;
         completed = totalSkillLevelsCompleted;
       });
-      // _addskillLevel();
     } catch (e) {
       print('Error adding skill: $e');
     }
@@ -93,17 +91,15 @@ class _JourneyscreenState extends State<Journeyscreen>
         progressText = "Not yet Started";
         progressColor = Colors.blue;
       } else {
-        progressText = "${levelCompleted}/${levelTotal} achived";
+        progressText = "$levelCompleted/$levelTotal achived";
         progressColor = Colors.red;
       }
     }
 
-    // return "${levelCompleted}/${levelTotal} achived";
     return Text(
       progressText,
       style: TextStyle(fontSize: 12, color: progressColor),
     );
-// return "Progress info not available";
   }
 
   Color colorFromString(String colorString) {
@@ -317,7 +313,7 @@ class DottedLineNearIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 2,
       height: 50,
       child: CustomPaint(

@@ -68,6 +68,5 @@ class CalendarState extends State<Calendar> {
         ),
       ],
     );
-    ;
   }
 }

@@ -1,87 +1,43 @@
 import 'package:flutter/material.dart';
 
 class CustomButtonDiscover extends StatelessWidget {
-  const CustomButtonDiscover({
+  CustomButtonDiscover({
     super.key,
     required this.routineName,
-    required this.url,
-    this.onTap,
+    required this.handleButtonPress,
+    required this.selectedButtonIndex,
+    required this.a,
   });
-
+  final int selectedButtonIndex;
+  final Function handleButtonPress;
   final String routineName;
-  final String url;
-  final VoidCallback? onTap;
+  final int a;
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double buttonHeight = screenWidth * 0.25;  // Dynamic height
-    double imageWidth = screenWidth * 0.3;     // Dynamic image width
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: buttonHeight,
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Card(
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.4,
+      margin: EdgeInsets.only(bottom: 15),
+      child: ElevatedButton(
+        onPressed: () => handleButtonPress(a),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: selectedButtonIndex == a
+              ? const Color.fromARGB(255, 255, 255, 255)
+              : const Color.fromARGB(255, 215, 172, 52),
+          foregroundColor: selectedButtonIndex == a
+              ? const Color.fromARGB(255, 215, 172, 52)
+              : const Color.fromARGB(255, 255, 255, 255),
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(15),
           ),
-          elevation: 3,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(10),
-                          bottomRight: Radius.circular(10),
-                        ),
-                        child: Image.asset(
-                          url,
-                          fit: BoxFit.cover,
-                          width: imageWidth,
-                          height: buttonHeight,
-                        ),
-                      ),
-                      Container(
-                        width: imageWidth,
-                        height: buttonHeight,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.4),
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            bottomRight: Radius.circular(10),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    routineName.replaceAll(' ', '\n'),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+          elevation: 5,
+        ),
+        child: Text(
+          routineName,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),

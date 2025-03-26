@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -39,7 +40,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   String displayText = "Hold to Speak";
   late Timer _timer;
   bool _isReversing = false;
-  bool _isRippleDone = false;
+  final bool _isRippleDone = false;
   bool _showContainer = false;
   double _scale = 0.0;
   bool _isSendingMessage = false;
@@ -54,8 +55,13 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       "How about a rejuvenating walk outside? It's a great way to refresh your mind and uplift your spirits. ";
   late stt.SpeechToText speech;
 
+  // Add variables to control auto scrolling behavior
+  bool _userIsScrolling = false;
+  bool _shouldAutoScroll = true;
+  double _lastScrollPosition = 0.0;
+
   bool isquestion = false;
-  Color _backgroundColor = Colors.transparent;
+  final Color _backgroundColor = Colors.transparent;
 
   void requestPermissions() async {
     var status = await Permission.microphone.request();
@@ -77,6 +83,9 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         _scale = 1.0;
       });
     });
+
+    // Add scroll controller listener
+    _scrollController.addListener(_scrollListener);
 
     _mindcontroller = AnimationController(
       vsync: this,
@@ -172,6 +181,37 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     });
   }
 
+  // Add scroll listener to detect user scrolling
+  void _scrollListener() {
+    // If user is scrolling manually (not our programmatic scrolls)
+    if (_scrollController.position.userScrollDirection !=
+        ScrollDirection.idle) {
+      _userIsScrolling = true;
+      _lastScrollPosition = _scrollController.position.pixels;
+
+      // Check if user is near bottom
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 100) {
+        _shouldAutoScroll = true;
+      } else {
+        _shouldAutoScroll = false;
+      }
+    }
+  }
+
+  // Method to scroll to bottom with ability to be overridden by user scrolling
+  void _scrollToBottom({Duration? duration}) {
+    if (!_shouldAutoScroll && _userIsScrolling) return;
+
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: duration ?? Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
   @override
   void dispose() {
     _videoController.dispose();
@@ -186,6 +226,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     _ccontroller.dispose();
     _sparkleController.dispose();
     _timer.cancel();
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
 
     super.dispose();
   }
@@ -357,6 +399,12 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             bubbleColor: Colors.white,
             textColor: Colors.black,
           ));
+
+          // Set auto-scroll to true when sending new message
+          _shouldAutoScroll = true;
+          Future.delayed(Duration(milliseconds: 100), () {
+            _scrollToBottom();
+          });
         }
       });
     }
@@ -387,35 +435,35 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
         double iconOpacity = 0.0;
         bool repeatGlow = true;
-        bool _isGlowVisible = true;
-        bool _isBoxVisible = false;
+        bool isGlowVisible = true;
+        bool isBoxVisible = false;
         int textDurationMs = (response.length * 10) + 800;
 
-        late AnimationController _gradientcontroller;
+        late AnimationController gradientcontroller;
 
-        _gradientcontroller = AnimationController(
+        gradientcontroller = AnimationController(
           vsync: this,
           duration: Duration(milliseconds: 800),
         );
 
-        _gradientcontroller.forward();
+        gradientcontroller.forward();
 
-        late AnimationController _imagecontroller;
-        double _opacity = 0.0;
-        bool _applyBlur = false;
+        late AnimationController imagecontroller;
+        double opacity = 0.0;
+        bool applyBlur = false;
         bool outerGlow = true;
 
-        _imagecontroller = AnimationController(vsync: this);
+        imagecontroller = AnimationController(vsync: this);
 
-        _imagecontroller.addListener(() {
+        imagecontroller.addListener(() {
           setState(() {
-            _opacity = _imagecontroller.value;
+            opacity = imagecontroller.value;
           });
         });
-        _imagecontroller.addStatusListener((status) {
+        imagecontroller.addStatusListener((status) {
           if (status == AnimationStatus.completed) {
             setState(() {
-              _applyBlur = true;
+              applyBlur = true;
             });
           }
         });
@@ -435,7 +483,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                       () {
                     if (context.mounted) {
                       setLocalState(() {
-                        _isBoxVisible = true;
+                        isBoxVisible = true;
                       });
                     }
 
@@ -443,7 +491,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                       if (context.mounted) {
                         if (context.mounted) {
                           setLocalState(() {
-                            _isGlowVisible = false;
+                            isGlowVisible = false;
 
                             Future.delayed(Duration(milliseconds: 500), () {
                               if (context.mounted) {
@@ -470,7 +518,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                         alignment: Alignment.centerLeft,
                         child: Stack(
                           children: [
-                            if (_isGlowVisible)
+                            if (isGlowVisible)
                               Lottie.asset(
                                 'assets/animations/All Lottie/Glowing Star/Image Preload Gradient.json',
                                 width: MediaQuery.of(context).size.width * 0.8,
@@ -479,7 +527,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                 fit: BoxFit.cover,
                                 repeat: false,
                               ),
-                            if (_isBoxVisible) ...[
+                            if (isBoxVisible) ...[
                               Lottie.asset(
                                 "assets/animations/Inner+Outerbox+Glow/Outerbox/Outerbox.json",
                                 width: MediaQuery.of(context).size.width * 0.87,
@@ -564,10 +612,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                                           milliseconds: 100),
                                                       curve: Curves.easeInOut,
                                                       opacity:
-                                                          ((_opacity - 0.5) <=
+                                                          ((opacity - 0.5) <=
                                                                   0.0)
                                                               ? 0
-                                                              : _opacity - 0.5,
+                                                              : opacity - 0.5,
                                                       child: Image.asset(
                                                         'assets/images/login.jpg',
                                                         width: MediaQuery.of(
@@ -586,9 +634,9 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                                       fit: BoxFit.cover,
                                                       repeat: false,
                                                       controller:
-                                                          _imagecontroller,
+                                                          imagecontroller,
                                                       onLoaded: (composition) {
-                                                        _imagecontroller
+                                                        imagecontroller
                                                           ..duration =
                                                               composition
                                                                   .duration
@@ -604,19 +652,19 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                                       duration: Duration(
                                                           milliseconds: 800),
                                                       curve: Curves.easeIn,
-                                                      opacity: _opacity >= 0.8
+                                                      opacity: opacity >= 0.8
                                                           ? 1.0
                                                           : 0.0,
                                                       child: AnimatedBuilder(
                                                         animation:
-                                                            _imagecontroller,
+                                                            imagecontroller,
                                                         builder:
                                                             (context, child) {
                                                           return Transform
                                                               .translate(
                                                             offset: Offset(
                                                                 0,
-                                                                _imagecontroller
+                                                                imagecontroller
                                                                             .value <
                                                                         0.8
                                                                     ? 20
@@ -724,14 +772,9 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       checkquestion(messageText);
 
       if (isquestion && _scrollController.hasClients) {
-        double currentOffset = _scrollController.offset;
-        double halfScreenHeight = MediaQuery.of(context).size.height / 2;
-
-        _scrollController.animateTo(
-          currentOffset + halfScreenHeight,
-          duration: Duration(milliseconds: 10),
-          curve: Curves.easeOut,
-        );
+        // Modified to use our new scroll method that respects user scrolling
+        _shouldAutoScroll = true;
+        _scrollToBottom(duration: Duration(milliseconds: 300));
       }
 
       AnimationController animationController = AnimationController(
@@ -810,36 +853,36 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
           double iconOpacity = 0.0;
           bool repeatGlow = true;
-          bool _isGlowVisible = true;
-          bool _isBoxVisible = false;
+          bool isGlowVisible = true;
+          bool isBoxVisible = false;
 
-          late AnimationController _gradientcontroller;
+          late AnimationController gradientcontroller;
 
-          _gradientcontroller = AnimationController(
+          gradientcontroller = AnimationController(
             vsync: this,
             duration: Duration(milliseconds: 800),
           );
 
-          _gradientcontroller.forward();
+          gradientcontroller.forward();
 
-          late AnimationController _imagecontroller;
-          double _opacity = 0.0;
-          bool _applyBlur = false;
+          late AnimationController imagecontroller;
+          double opacity = 0.0;
+          bool applyBlur = false;
           double opacityLevel = 1.0;
 
-          bool _isQuesAnimVisible = true;
+          bool isQuesAnimVisible = true;
 
-          _imagecontroller = AnimationController(vsync: this);
+          imagecontroller = AnimationController(vsync: this);
 
-          _imagecontroller.addListener(() {
+          imagecontroller.addListener(() {
             setState(() {
-              _opacity = _imagecontroller.value;
+              opacity = imagecontroller.value;
             });
           });
-          _imagecontroller.addStatusListener((status) {
+          imagecontroller.addStatusListener((status) {
             if (status == AnimationStatus.completed) {
               setState(() {
-                _applyBlur = true;
+                applyBlur = true;
               });
             }
           });
@@ -865,7 +908,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
                         Future.delayed(Duration(milliseconds: 500), () {
                           setLocalState(() {
-                            _isGlowVisible = false;
+                            isGlowVisible = false;
                           });
                         });
                       });
@@ -874,12 +917,12 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                   Future.delayed(
                       Duration(milliseconds: isquestion ? 2800 : 2400), () {
                     setLocalState(() {
-                      _isBoxVisible = true;
+                      isBoxVisible = true;
                       Future.delayed(Duration(milliseconds: 800), () {
                         setLocalState(() {
                           iconOpacity = 1.0;
                           repeatGlow = false;
-                          _isQuesAnimVisible = false;
+                          isQuesAnimVisible = false;
                         });
                         isquestion
                             ? setState(() {
@@ -890,11 +933,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     });
                   });
 
-                  _scrollController.animateTo(
-                    _scrollController.position.maxScrollExtent,
-                    duration: Duration(milliseconds: 50),
-                    curve: Curves.easeOut,
-                  );
+                  _scrollToBottom(duration: Duration(milliseconds: 300));
 
                   return AnimatedBuilder(
                     animation: colorAnimation,
@@ -906,7 +945,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                           alignment: Alignment.centerLeft,
                           child: Stack(
                             children: [
-                              if (_isGlowVisible || _isQuesAnimVisible)
+                              if (isGlowVisible || isQuesAnimVisible)
                                 AnimatedOpacity(
                                   opacity: opacityLevel,
                                   duration: Duration(
@@ -929,7 +968,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                     repeat: true,
                                   ),
                                 ),
-                              if (_isBoxVisible) ...[
+                              if (isBoxVisible) ...[
                                 Lottie.asset(
                                   "assets/animations/Inner+Outerbox+Glow/Outerbox/Outerbox.json",
                                   width:
@@ -1015,11 +1054,11 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                                         duration: Duration(
                                                             milliseconds: 100),
                                                         curve: Curves.easeInOut,
-                                                        opacity: ((_opacity -
-                                                                    0.3) <=
-                                                                0.0)
-                                                            ? 0
-                                                            : _opacity - 0.3,
+                                                        opacity:
+                                                            ((opacity - 0.3) <=
+                                                                    0.0)
+                                                                ? 0
+                                                                : opacity - 0.3,
                                                         child: Image.asset(
                                                           'assets/images/login.jpg',
                                                           width: MediaQuery.of(
@@ -1038,24 +1077,24 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                                         fit: BoxFit.cover,
                                                         repeat: false,
                                                         controller:
-                                                            _imagecontroller,
+                                                            imagecontroller,
                                                         onLoaded:
                                                             (composition) {
-                                                          _imagecontroller
+                                                          imagecontroller
                                                             ..duration =
                                                                 composition
                                                                     .duration
                                                             ..forward()
                                                                 .then((value) {
                                                               setState(() {
-                                                                _applyBlur =
+                                                                applyBlur =
                                                                     true;
                                                               });
                                                             });
                                                         },
                                                       ),
                                                     ),
-                                                    if (_applyBlur)
+                                                    if (applyBlur)
                                                       Positioned(
                                                         bottom: 0,
                                                         left: 0,
@@ -1081,19 +1120,19 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                                         duration: Duration(
                                                             milliseconds: 800),
                                                         curve: Curves.easeIn,
-                                                        opacity: _opacity >= 0.8
+                                                        opacity: opacity >= 0.8
                                                             ? 1.0
                                                             : 0.0,
                                                         child: AnimatedBuilder(
                                                           animation:
-                                                              _imagecontroller,
+                                                              imagecontroller,
                                                           builder:
                                                               (context, child) {
                                                             return Transform
                                                                 .translate(
                                                               offset: Offset(
                                                                   0,
-                                                                  _imagecontroller
+                                                                  imagecontroller
                                                                               .value <
                                                                           0.8
                                                                       ? 20
@@ -1314,6 +1353,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                         Expanded(
                           child: ListView.builder(
                             controller: _scrollController,
+                            physics:
+                                AlwaysScrollableScrollPhysics(), // Ensure always scrollable
                             itemCount: messages.length,
                             itemBuilder: (context, index) {
                               return AnimatedContainer(

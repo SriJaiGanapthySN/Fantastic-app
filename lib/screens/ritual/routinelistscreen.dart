@@ -9,7 +9,7 @@ import 'package:fab/screens/ritual/taskreveal.dart';
 class Routinelistscreen extends StatefulWidget {
   final String email;
 
-  const Routinelistscreen({Key? key, required this.email}) : super(key: key);
+  const Routinelistscreen({super.key, required this.email});
 
   @override
   State<Routinelistscreen> createState() => _RoutinelistscreenState();
@@ -18,7 +18,7 @@ class Routinelistscreen extends StatefulWidget {
 class _RoutinelistscreenState extends State<Routinelistscreen> {
   List<Map<String, dynamic>> _habits = [];
   TimeOfDay _selectedTime = TimeOfDay.now();
-  bool _isAnimating = false;
+  final bool _isAnimating = false;
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(

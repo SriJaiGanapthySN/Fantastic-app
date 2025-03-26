@@ -1,8 +1,7 @@
-import 'dart:ui'; // Import for the BackdropFilter
+// Import for the BackdropFilter
 
 import 'package:fab/components/coaching/coachingfirstleveltile.dart';
 import 'package:fab/screens/coaching/coachingscreenreveal.dart';
-import 'package:fab/components/common/stackcard.dart';
 import 'package:fab/services/coaching_service.dart';
 import 'package:flutter/material.dart';
 

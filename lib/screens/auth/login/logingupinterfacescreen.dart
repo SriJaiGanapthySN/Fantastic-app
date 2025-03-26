@@ -81,7 +81,7 @@ class Logingupinterfacescreen extends StatelessWidget {
                 ),
 
                 // Email Sign-In Button
-                Container(
+                SizedBox(
                   width: 350,
                   child: ElevatedButton(
                     onPressed: () {
